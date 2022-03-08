@@ -1,12 +1,15 @@
 {
   "name": "refactor",
   "version": "1.0.0",
-  "description": "",
+  "description": "Refatorando código legado sem parar de entregar novas features com NodeJS, TypeScript e Jest.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "keywords": ["node", "typescrypt", "jest", "code-refactor"],
+  "author": "Reginaldo Santos (github/xumes)",
+  "license": "ISC",
+  "devDependencies": {
+    "git-commit-msg-linter": "^4.1.1"
+  }
 }
