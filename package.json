@@ -6,10 +6,17 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["node", "typescrypt", "jest", "code-refactor"],
+  "keywords": [
+    "node",
+    "typescrypt",
+    "jest",
+    "code-refactor"
+  ],
   "author": "Reginaldo Santos (github/xumes)",
   "license": "ISC",
   "devDependencies": {
-    "git-commit-msg-linter": "^4.1.1"
+    "@types/node": "^17.0.21",
+    "git-commit-msg-linter": "^4.1.1",
+    "typescript": "^4.6.2"
   }
 }
