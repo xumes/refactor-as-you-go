@@ -1,5 +1,7 @@
+import { ForbiddenError } from "../../errors/ForbiddenError";
+import { InvalidParamError } from "../../errors/InvalidParamError";
+import { UserNotFoundError } from "../../errors/userNotFoundError";
 import { userModel, UserRepository } from "../../repository";
-
 export class UserController {
     repository: UserRepository
 
@@ -8,6 +10,11 @@ export class UserController {
     }
 
     add(name: string): userModel {
+        if (!name) {
+            throw new InvalidParamError
+            return
+        }
+
         const newUserId = this.repository.add(name)
 
         return {
@@ -21,10 +28,15 @@ export class UserController {
     }
 
     getById(id: number): userModel {
+        if (isNaN(+id)) {
+            throw new InvalidParamError
+            return
+        }
+
         const user = this.repository.get(id)
 
         if (!user) {
-            throw new Error('User Not Found')
+            throw new UserNotFoundError
             return
         }
 
@@ -32,19 +44,39 @@ export class UserController {
     }
 
     deleteById(id: number): void {
+        if (isNaN(+id)) {
+            throw new InvalidParamError
+            return
+        }
+
+        const userLoggedId = 1
+        if ( id === userLoggedId) {
+            throw new ForbiddenError
+        }
+
         const success = this.repository.delete(id)
 
         if (!success) {
-            throw new Error('User Not Found')
+            throw new UserNotFoundError
             return
         }
     }
 
     updateById(id: number, name: string): userModel {
+        if (isNaN(+id)) {
+            throw new InvalidParamError
+            return
+        }
+
+        if (!name) {
+            throw new InvalidParamError
+            return
+        }
+
         const updatedUser = this.repository.update(id, name)
 
         if (!updatedUser){
-            throw new Error('User Not Found')
+            throw new UserNotFoundError
             return
         }
 

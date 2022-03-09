@@ -1,4 +1,5 @@
 import { Router, Request, Response } from 'express'
+import { UserNotFoundError } from '../../errors/userNotFoundError';
 import { userModel, UserRepository } from '../../repository';
 import { UserController } from '../../services/user/UserController';
 
@@ -13,7 +14,7 @@ getMe.use('/', (req: Request, res: Response): void => {
         const user: userModel = controller.getById(myId)
         res.json({user})
     } catch (error) {
-        res.status(404).send({success: false})
+        res.status(500).json({success: false})        
     }
 })
 
