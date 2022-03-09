@@ -1,47 +1,95 @@
 import { Router } from 'express'
+import { UserRepository } from './repository';
 
 const router: Router = Router();
 
-const users = [];
+const userRepository = new UserRepository()
+const myUserId = 1
 
 router.all('/user/:action/:id?', (req, res) => {
     const { action, id } = req.params
+    const { method } = req
+
     if (action === 'all') {
-        res.json({users})
-    }
-    else if (action === 'me') {
-        res.json({user: {name: 'Reginaldo'}})
-    }
-    else if (action === 'id' ) {
-        if (id !== null && id !== undefined) {
-            res.json({user: {id}})
+        if (method == 'GET') {
+            const users = userRepository.getAll()
+            res.json({users})
         }
         else {
-            console.log("error", id)
-            res.json({ success: false})
+            res.status(405).send({success: false})
+        }
+    }
+    else if (action === 'me') {
+        if (method == 'GET') {
+            const user = userRepository.get(myUserId)
+            res.json({user})
+        }
+        else {
+            res.status(405).send({success: false})
+        }
+    }
+    else if (action === 'id' ) {
+        if (method == 'GET') {
+            if (id !== null && id !== undefined) {
+                const user = userRepository.get(parseInt(id))
+                if (user) {
+                    res.json({user})
+                }
+                else {
+                    res.status(404).send({success: false})
+                }
+            }
+            else {
+                res.json({ success: false})
+            }
+        }
+        else if (method == 'DELETE') {
+            if (id !== null && id !== undefined) {
+                const isSuccess = userRepository.delete(parseInt(id))
+                if (isSuccess == true) {
+                    res.json({success: true})
+                }
+                else {
+                    res.status(404).send({success: false})
+                }
+            }
+            else {
+                res.json({ success: false})
+            }
+        }
+        else if (method == 'PUT' || method == 'PATCH') {
+            if (id !== null && id !== undefined) {
+                const newUserName = req.body.user.name
+                const changedUser = userRepository.update(parseInt(id), newUserName)
+                if (changedUser) {
+                    const {name} = req.body.user
+                    res.json({user: {name}})
+                }
+                else {
+                    res.status(404).send({success: false})
+                }
+                
+            }
+            else {
+                res.json({ success: false})
+            }
+        }
+        else {
+            res.status(405).send({success: false})
         }
     }
     else if (action === 'add') {
-        const {name} = req.body.user
-        res.json({user: {name}})
-    }
-    else if (action === 'delete' ) {
-        if (id !== null && id !== undefined) {
-            if (parseInt(id) == 4) {
-                res.json({success: true})
-            }
-            else {
-                res.status(404).send({success: false})
-            }
-            
+        if (method == 'POST') {
+            const {name} = req.body
+            const newUser = userRepository.add(name)
+            res.json({newUser})
         }
         else {
-            console.log("error", id)
-            res.json({ success: false})
+            res.status(405).send({success: false})
         }
     }
     else {
-        res.json({ success: false})
+        res.status(400).send({success: false})
     }
 })
 
