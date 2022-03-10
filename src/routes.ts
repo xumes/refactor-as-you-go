@@ -59,11 +59,11 @@ router.all('/user/:action/:id?', (req, res) => {
         }
         else if (method == 'PUT' || method == 'PATCH') {
             if (id !== null && id !== undefined) {
-                const newUserName = req.body.user.name
-                const changedUser = userRepository.update(parseInt(id), newUserName)
+                const {name} = req.body
+                const changedUser = userRepository.update(parseInt(id), name)
                 if (changedUser) {
-                    const {name} = req.body.user
-                    res.json({user: {name}})
+                    const {name} = req.body
+                    res.json({changedUser})
                 }
                 else {
                     res.status(404).send({success: false})
